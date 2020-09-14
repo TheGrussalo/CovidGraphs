@@ -50,11 +50,16 @@ stages:
   - job: deployment
     displayName: Release
     steps:
-      - task: AzureRmWebAppDeployment@4
-        displayName: 'Deploy to Azure'
-        inputs:
-          ConnectionType: 'AzureRM'
-          azureSubscription: 'Pay-As-You-Go(fc4a63eb-b273-4707-877c-a7046aece0d9)'
-          appType: 'webApp'
-          WebAppName: 'covidgraphs'
-          packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
+    - task: AzurePowerShell@5
+      inputs:
+        azureSubscription: 'Pay-As-You-Go(fc4a63eb-b273-4707-877c-a7046aece0d9)'
+        ScriptType: 'InlineScript'
+        Inline: 'Get-ChildItem -Path $(System.ArtifactsDirectory) –Recurse'
+    - task: AzureRmWebAppDeployment@4
+      displayName: 'Deploy to Azure'
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Pay-As-You-Go(fc4a63eb-b273-4707-877c-a7046aece0d9)'
+        appType: 'webApp'
+        WebAppName: 'covidgraphs'
+        packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
