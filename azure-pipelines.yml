@@ -38,6 +38,16 @@ stages:
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
+
+    - task: AzureRmWebAppDeployment@4
+      displayName: 'Deploy to Azure'
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Pay-As-You-Go(fc4a63eb-b273-4707-877c-a7046aece0d9)'
+        appType: 'webApp'
+        WebAppName: 'covidgraphs'
+        packageForLinux: '$(build.artifactStagingDirectory)/**/*.zip'
+
     - task: PublishBuildArtifacts@1
       displayName: Publish build artifacts
       inputs:
