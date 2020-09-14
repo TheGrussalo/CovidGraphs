@@ -1,0 +1,172 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@*<script src="~/scripts/Chart.js"></script>*@
+<script src="~/scripts/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+
+<canvas id="covidChart" width="400" height="200"></canvas>
+
+<script>
+    var ctx = document.getElementById('covidChart');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            datasets: [{
+                label: 'Covid',
+                data: @Html.Raw(ViewBag.DataPoints),
+                backgroundColor: [
+                    //'rgba(255, 0, 0, 0.2)',
+                    //'rgba(255, 0, 0, 0.2)',
+                    //'rgba(255, 0, 0, 0.2)',
+                    //'rgba(255, 0, 0, 0.2)',
+                    //'rgba(255, 0, 0, 0.2)',
+                    'rgba(255, 0, 0, 0.2)'
+
+                    //'rgba(255, 99, 132, 0.2)',
+                    //'rgba(54, 162, 235, 0.2)',
+                    //'rgba(255, 206, 86, 0.2)',
+                    //'rgba(75, 192, 192, 0.2)',
+                    //'rgba(153, 102, 255, 0.2)',
+                    //'rgba(255, 159, 64, 0.2)'
+                ],
+                //borderColor: [
+                //    //'rgba(255,99,132,1)',
+                //    //'rgba(54, 162, 235, 1)',
+                //    //'rgba(255, 206, 86, 1)',
+                //    //'rgba(75, 192, 192, 1)',
+                //    //'rgba(153, 102, 255, 1)',
+                //    'rgba(255, 159, 64, 1)'
+                //],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'day'
+                    }
+                }]
+            }
+        }
+    });
+</script>
+Source: <a href="@Html.Raw(ViewBag.URL)" target="_blank">https://coronavirus.data.gov.uk/</a>
+
+@*<canvas id="covidChart" width="400" height="400"></canvas>
+    <script>
+        var ctx = document.getElementById('covidChart');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                //labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'brown'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [{
+                        x: new Date(),
+                        y: 1
+                    }, {
+                        t: new Date(),
+                        y: 10
+                    }],
+                    //data: [12, 19, 3, 5, 2, 3, 99],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>*@
+
+
+
+@*<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>*@
+@*<div id="chartContainer"></div>
+
+    <script type="text/javascript">
+
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                theme: "light2",
+                animationEnabled: true,
+                title: {
+                    text: "Covid rates for Eastleigh"
+                },
+                subtitles: [
+                    { text: "Try Resizing the Browser" }
+                ],
+                data: [
+                    {
+                        type: "column", //change type to bar, line, area, pie, etc
+                        dataPoints: @Html.Raw(ViewBag.DataPoints)
+                        //dataPoints: [
+                        //    { x: 10, y: 71 },
+                        //    { x: 20, y: 55 },
+                        //    { x: 30, y: 50 },
+                        //    { x: 40, y: 65 },
+                        //    { x: 50, y: 95 },
+                        //    { x: 60, y: 68 },
+                        //    { x: 70, y: 28 },
+                        //    { x: 80, y: 34 },
+                        //    { x: 90, y: 14 }
+                        //]
+                    }
+                ]
+            });
+            chart.render();
+        };
+    </script>*@
+
+@*<div class="jumbotron">
+        <h1>ASP.NET</h1>
+        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+        <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Getting started</h2>
+            <p>
+                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+                enables a clean separation of concerns and gives you full control over markup
+                for enjoyable, agile development.
+            </p>
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Get more libraries</h2>
+            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Web Hosting</h2>
+            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        </div>
+    </div>*@
