@@ -57,4 +57,4 @@ stages:
           azureSubscription: 'Pay-As-You-Go(fc4a63eb-b273-4707-877c-a7046aece0d9)'
           appType: 'webApp'
           WebAppName: 'covidgraphs'
-          packageForLinux: '$(build.artifactStagingDirectory)/**/*.zip'
+          packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
