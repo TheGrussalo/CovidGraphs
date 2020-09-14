@@ -20,8 +20,6 @@ stages:
 
   jobs:
   - job: Build
-    pool:
-      name: Default
     steps:
     - task: NuGetToolInstaller@1
 
