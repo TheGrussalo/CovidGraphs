@@ -38,6 +38,11 @@ stages:
       inputs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
+    - task: PublishBuildArtifacts@1
+      displayName: Publish build artifacts
+      inputs:
+        ArtifactName: CovidGraphs
+        PathtoPublish: $(Build.ArtifactStagingDirectory)
 
 - stage: Deploy
   displayName: Deploy To Azure
@@ -46,6 +51,7 @@ stages:
     displayName: Release
     steps:
       - task: AzureRmWebAppDeployment@4
+        displayName: 'Deploy to Azure'
         inputs:
           ConnectionType: 'AzureRM'
           azureSubscription: 'Pay-As-You-Go(fc4a63eb-b273-4707-877c-a7046aece0d9)'
