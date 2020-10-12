@@ -22,27 +22,54 @@ namespace CovidGraphs.Controllers
             string area = "Eastleigh";
             string url = "https://api.coronavirus.data.gov.uk/v1/data?filters=areaName=" + area + "&structure={%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22}";
 
-            string graphData = GetGraphData(url);
-            ViewBag.DataPoints = graphData;
+            CovidData covidData = GetGraphData(url);
+
+            ViewBag.CasesInLastDays = CasesInLastDays(covidData, -7);
+            ViewBag.DataPoints = ConvertDataToGraphFormat(covidData);
             ViewBag.Area = area;
             ViewBag.Url = url;
 
             return View();
         }
 
-        private string GetGraphData(string url)
+        private int CasesInLastDays(CovidData covidData, int numerOfDays)
+        {
+            int cases = 0;
+            TimeSpan lastSevenDays = new TimeSpan(numerOfDays, 0, 0, 0);
+            //DateTime[] dates = new DateTime[7];
+            List<DateTime> dates = new List<DateTime>();
+
+            foreach (CovidDataItem figures in covidData.data)
+            {
+                if (Convert.ToDateTime(figures.date) >= DateTime.Today.Add(lastSevenDays) && (!dates.Contains(Convert.ToDateTime(figures.date))))
+                {
+                    cases += figures.newCasesBySpecimenDate;
+                    dates.Add(Convert.ToDateTime(figures.date));
+                }
+            }
+
+            return cases;
+        }
+
+        private String ConvertDataToGraphFormat(CovidData covidData) 
         {
             List<DataPoint> graphData = new List<DataPoint>();
 
-            String data = GetData(url);
-
-            var covidData = JsonConvert.DeserializeObject<CovidJsonRoot>(data);
-
-            foreach (CovidData figures in covidData.data)
+            foreach (CovidDataItem figures in covidData.data)
             {
                 graphData.Add(new DataPoint(Convert.ToDateTime(figures.date), figures.newCasesBySpecimenDate));
             }
             return JsonConvert.SerializeObject(graphData);
+        }
+
+        private CovidData GetGraphData(string url)
+        {
+            String data = GetData(url);
+
+            CovidData covidData = JsonConvert.DeserializeObject<CovidData>(data);
+
+            return covidData;
+
         }
 
         [HttpPost]
@@ -50,9 +77,9 @@ namespace CovidGraphs.Controllers
         {
             string url = "https://api.coronavirus.data.gov.uk/v1/data?filters=areaName=" + area + "&structure={%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22}";
 
-            string graphData = GetGraphData(url);
-
-            ViewBag.DataPoints = graphData;
+            CovidData covidData = GetGraphData(url);
+            ViewBag.CasesInLastDays = CasesInLastDays(covidData, -7);
+            ViewBag.DataPoints = ConvertDataToGraphFormat(covidData);
             ViewBag.Url = url;
             ViewBag.Area = area;
 
@@ -95,4 +122,3 @@ namespace CovidGraphs.Controllers
     }
 
 }
-

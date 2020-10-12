@@ -125,7 +125,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\CovidData.cs" />
+    <Compile Include="Models\CovidDataItem.cs" />
     <Compile Include="Models\DataPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

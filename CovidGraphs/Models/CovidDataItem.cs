@@ -5,17 +5,17 @@ using System.Web;
 
 namespace CovidGraphs.Models
 {
-    public class CovidData
+    public class CovidDataItem
     {
         public string date { get; set; }
         public int newCasesBySpecimenDate { get; set; }
     }
 
-    public class CovidJsonRoot
+    public class CovidData
     {
         public int length { get; set; }
         public int maxPageLimit { get; set; }
-        public List<CovidData> data { get; set; }
+        public List<CovidDataItem> data { get; set; }
     }
 
     public class Areas
