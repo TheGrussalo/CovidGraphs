@@ -1,0 +1,76 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+stages:
+- stage:  Build
+  displayName: Build Code
+
+  jobs:
+  - job: Build
+    steps:
+    - task: NuGetToolInstaller@1
+
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
+
+    - task: VSBuild@1
+      inputs:
+        solution: '$(solution)'
+        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+
+    - task: VSTest@2
+      inputs:
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+
+    - task: AzureRmWebAppDeployment@4
+      displayName: 'Deploy to Azure'
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Pay-As-You-Go(fc4a63eb-b273-4707-877c-a7046aece0d9)'
+        appType: 'webApp'
+        WebAppName: 'covidgraphs'
+        packageForLinux: '$(build.artifactStagingDirectory)/**/*.zip'
+
+    - task: PublishBuildArtifacts@1
+      displayName: Publish build artifacts
+      inputs:
+        ArtifactName: CovidGraphs
+        PathtoPublish: $(Build.ArtifactStagingDirectory)
+
+- stage: Deploy
+  displayName: Deploy To Azure
+  jobs:
+  - job: deployment
+    displayName: Release
+    steps:
+    - task: AzurePowerShell@5
+      inputs:
+        azureSubscription: 'Pay-As-You-Go(fc4a63eb-b273-4707-877c-a7046aece0d9)'
+        ScriptType: 'InlineScript'
+        Inline: 'Get-ChildItem -Path $(System.ArtifactsDirectory) –Recurse'
+        preferredAzurePowerShellVersion: '3.1.0'
+    - task: AzureRmWebAppDeployment@4
+      displayName: 'Deploy to Azure'
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Pay-As-You-Go(fc4a63eb-b273-4707-877c-a7046aece0d9)'
+        appType: 'webApp'
+        WebAppName: 'covidgraphs'
+        packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
