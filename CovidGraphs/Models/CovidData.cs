@@ -17,4 +17,15 @@ namespace CovidGraphs.Models
         public int maxPageLimit { get; set; }
         public List<CovidData> data { get; set; }
     }
+
+    public class Areas
+    { 
+        public int areaID { get; set; }
+        public AreaList areaNames { get; set; }
+    }
+    public enum AreaList
+    { 
+        Fareham,
+        Reading
+    }
 }

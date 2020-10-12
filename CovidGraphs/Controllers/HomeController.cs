@@ -9,6 +9,7 @@ using System.Dynamic;
 using CovidGraphs.Models;
 using System.IO;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 
 namespace CovidGraphs.Controllers
 {
@@ -18,12 +19,22 @@ namespace CovidGraphs.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            string area = "Eastleigh";
+            string url = "https://api.coronavirus.data.gov.uk/v1/data?filters=areaName=" + area + "&structure={%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22}";
+
+            string graphData = GetGraphData(url);
+            ViewBag.DataPoints = graphData;
+            ViewBag.Area = area;
+            ViewBag.Url = url;
+
+            return View();
+        }
+
+        private string GetGraphData(string url)
+        {
             List<DataPoint> graphData = new List<DataPoint>();
 
-            string url = "https://api.coronavirus.data.gov.uk/v1/data?filters=areaName=Eastleigh&structure={%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22}";
-            //string url = "https://api.coronavirus.data.gov.uk/v1/data?filters=areaName=Reading&structure={%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22}";
-
-            var data = GetData(url);
+            String data = GetData(url);
 
             var covidData = JsonConvert.DeserializeObject<CovidJsonRoot>(data);
 
@@ -31,9 +42,19 @@ namespace CovidGraphs.Controllers
             {
                 graphData.Add(new DataPoint(Convert.ToDateTime(figures.date), figures.newCasesBySpecimenDate));
             }
+            return JsonConvert.SerializeObject(graphData);
+        }
 
-            ViewBag.DataPoints = JsonConvert.SerializeObject(graphData);
+        [HttpPost]
+        public ActionResult Index(string area)
+        {
+            string url = "https://api.coronavirus.data.gov.uk/v1/data?filters=areaName=" + area + "&structure={%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22}";
+
+            string graphData = GetGraphData(url);
+
+            ViewBag.DataPoints = graphData;
             ViewBag.Url = url;
+            ViewBag.Area = area;
 
             return View();
         }
@@ -56,7 +77,7 @@ namespace CovidGraphs.Controllers
         {
 
             var client = new MyWebClient();
-            var json = client.DownloadString(url);
+            string json = client.DownloadString(url);
 
             return json;
 

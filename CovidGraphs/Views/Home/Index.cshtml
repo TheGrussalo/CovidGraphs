@@ -3,10 +3,27 @@
 }
 
 @*<script src="~/scripts/Chart.js"></script>*@
+@using CovidGraphs.Models
+
+@model Areas
+
 <script src="~/scripts/moment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
 
+<div class="dropdown">
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { id = "Form1" }))
+    {
+
+        @Html.DropDownList("Area",
+                                new SelectList(Enum.GetValues(typeof(AreaList))),
+                        "Eastleigh",
+                        new { @class = "form-control", onchange = "document.getElementById('Form1').submit();" })
+
+    }
+</div>
+
 <canvas id="covidChart" width="400" height="200"></canvas>
+    Source: <a href="@Html.Raw(ViewBag.URL)" target="_blank"> https://coronavirus.data.gov.uk/</a>
 
 <script>
     var ctx = document.getElementById('covidChart');
@@ -14,7 +31,7 @@
         type: 'bar',
         data: {
             datasets: [{
-                label: 'Covid',
+                label: '@Html.Raw(ViewBag.Area)',
                 data: @Html.Raw(ViewBag.DataPoints),
                 backgroundColor: [
                     //'rgba(255, 0, 0, 0.2)',
@@ -54,7 +71,6 @@
         }
     });
 </script>
-Source: <a href="@Html.Raw(ViewBag.URL)" target="_blank">https://coronavirus.data.gov.uk/</a>
 
 @*<canvas id="covidChart" width="400" height="400"></canvas>
     <script>
