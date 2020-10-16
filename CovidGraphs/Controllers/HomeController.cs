@@ -75,6 +75,10 @@ namespace CovidGraphs.Controllers
         [HttpPost]
         public ActionResult Index(string area)
         {
+            if (area == "") 
+            {
+                area = "Eastleigh";
+            }
             string url = "https://api.coronavirus.data.gov.uk/v1/data?filters=areaName=" + area + "&structure={%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22}";
 
             CovidData covidData = GetGraphData(url);
