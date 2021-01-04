@@ -26,6 +26,7 @@ namespace CovidGraphs.Models
     public enum AreaList
     { 
         Fareham,
-        Reading
+        Reading,
+        London
     }
 }
