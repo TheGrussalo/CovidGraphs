@@ -27,6 +27,7 @@ namespace CovidGraphs.Models
     { 
         Fareham,
         Reading,
-        London
+        London,
+        Scotland
     }
 }

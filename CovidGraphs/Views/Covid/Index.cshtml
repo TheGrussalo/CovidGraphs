@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@*<script src="~/scripts/Chart.js"></script>*@
+@using CovidGraphs.Models
+
+@model Areas
+
+<script src="~/scripts/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+
+<div class="">
+    @*    <p></p>*@
+    <br />
+</div>
+<div class="dropdown">
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { id = "Form1" }))
+    {
+
+        @Html.DropDownList("Area",
+                                new SelectList(Enum.GetValues(typeof(AreaList))),
+                        "Eastleigh",
+                        new { @class = "form-control", onchange = "document.getElementById('Form1').submit();" })
+
+    }
+</div>
+
+<canvas id="covidChart" width="400" height="200"></canvas>
+
+    There have been <strong>@Html.Raw(ViewBag.CasesInLastDays)</strong> cases in @Html.Raw(ViewBag.Area) in the last 7 days.
+    <hr>
+    Source: <a href="@Html.Raw(ViewBag.URL)" target="_blank"> https://coronavirus.data.gov.uk/</a>
+
+    <script>
+    var ctx = document.getElementById('covidChart');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            datasets: [{
+                label: '@Html.Raw(ViewBag.Area)',
+                data: @Html.Raw(ViewBag.DataPoints),
+                backgroundColor: [
+                    //'rgba(255, 0, 0, 0.2)',
+                    //'rgba(255, 0, 0, 0.2)',
+                    //'rgba(255, 0, 0, 0.2)',
+                    //'rgba(255, 0, 0, 0.2)',
+                    //'rgba(255, 0, 0, 0.2)',
+                    'rgba(255, 0, 0, 0.2)'
+
+                    //'rgba(255, 99, 132, 0.2)',
+                    //'rgba(54, 162, 235, 0.2)',
+                    //'rgba(255, 206, 86, 0.2)',
+                    //'rgba(75, 192, 192, 0.2)',
+                    //'rgba(153, 102, 255, 0.2)',
+                    //'rgba(255, 159, 64, 0.2)'
+                ],
+                //borderColor: [
+                //    //'rgba(255,99,132,1)',
+                //    //'rgba(54, 162, 235, 1)',
+                //    //'rgba(255, 206, 86, 1)',
+                //    //'rgba(75, 192, 192, 1)',
+                //    //'rgba(153, 102, 255, 1)',
+                //    'rgba(255, 159, 64, 1)'
+                //],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'day'
+                    }
+                }]
+            }
+        }
+    });
+    </script>
